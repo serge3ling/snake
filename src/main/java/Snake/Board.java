@@ -19,6 +19,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 /**
@@ -127,6 +128,13 @@ public class Board extends JPanel implements ActionListener {
         g.setColor(Color.white);
         g.setFont(small);
         g.drawString(msg, (B_WIDTH - metr.stringWidth(msg)) / 2, B_HEIGHT / 2);
+        
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                RecordFrame.main(null);
+            }
+        });
     }
 
     private void checkApple() {

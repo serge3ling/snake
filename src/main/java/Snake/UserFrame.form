@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
-  <Properties>
-    <Property name="defaultCloseOperation" type="int" value="3"/>
-  </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
     <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
@@ -25,12 +22,12 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="144" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="playButton" min="-2" max="-2" attributes="0"/>
-                  <Component id="userField" min="-2" max="-2" attributes="0"/>
-                  <Component id="userBox" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="userBox" max="32767" attributes="0"/>
+                  <Component id="userField" alignment="0" max="32767" attributes="0"/>
+                  <Component id="playButton" alignment="0" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace pref="160" max="32767" attributes="0"/>
+              <EmptySpace pref="137" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -52,27 +49,31 @@
     <Component class="javax.swing.JComboBox" name="userBox">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="4">
-            <StringItem index="0" value="Item 1"/>
-            <StringItem index="1" value="Item 2"/>
-            <StringItem index="2" value="Item 3"/>
-            <StringItem index="3" value="Item 4"/>
+          <StringArray count="2">
+            <StringItem index="0" value="anonymous"/>
+            <StringItem index="1" value="New..."/>
           </StringArray>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="userBoxActionPerformed"/>
+      </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="userField">
       <Properties>
-        <Property name="text" type="java.lang.String" value="jTextField1"/>
+        <Property name="editable" type="boolean" value="false"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="playButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Play"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="playButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

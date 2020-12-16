@@ -12,13 +12,16 @@ import javax.swing.JFrame;
  * @author tret
  */
 public class MainFrame extends javax.swing.JFrame {
-
+    private final Conf conf;
+    
     /**
      * Creates new form MainFrame
      */
-    public MainFrame() {
+    public MainFrame(Conf conf) {
+        this.conf = conf;
+        
         //initComponents();
-        this.init();
+        init();
         add(new Board());
         
         setResizable(false);
@@ -89,6 +92,11 @@ public class MainFrame extends javax.swing.JFrame {
         fileMenu.setText("Файл");
 
         exitMenuItem.setText("Вихід");
+        exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitMenuItemActionPerformed(evt);
+            }
+        });
         fileMenu.add(exitMenuItem);
 
         menuBar.add(fileMenu);
@@ -127,11 +135,11 @@ public class MainFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        /*java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainFrame().setVisible(true);
+                new MainFrame(new Conf()).setVisible(true);
             }
-        });
+        });*/
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

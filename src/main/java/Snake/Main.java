@@ -6,6 +6,9 @@
 package Snake;
 
 //import java.awt.EventQueue;
+
+import javax.swing.SwingUtilities;
+
 //import javax.swing.JFrame;
 
 /**
@@ -13,18 +16,20 @@ package Snake;
  * @author tret
  */
 public class Main {
+    private Conf conf;
     private UserFrame userFrame;
-    private MainFrame mainFrame;
     
     public Main() {
-       userFrame = new UserFrame();
+        conf = new Conf();
+        userFrame = new UserFrame(conf);
     }
     
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        MainFrame.main(args);
+        //MainFrame.main(args);
+        
         /*EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {                
@@ -32,5 +37,17 @@ public class Main {
                 ex.setVisible(true);                
             }
         });*/
+        
+        Main main = new Main();
+        main.go();
+    }
+    
+    public void go() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                userFrame.setVisible(true);
+            }
+        });
     }
 }

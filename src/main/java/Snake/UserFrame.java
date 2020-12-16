@@ -5,17 +5,40 @@
  */
 package Snake;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.SwingUtilities;
+
 /**
  *
  * @author alex3
  */
 public class UserFrame extends javax.swing.JFrame {
-
+    private final Conf conf;
+    
     /**
      * Creates new form UserFrame
      */
-    public UserFrame() {
+    public UserFrame(Conf conf) {
+        this.conf = conf;
         initComponents();
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent event) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (userFieldEditable()) {
+                            //https://www.tutorialspoint.com/how-to-match-a-non-word-character-using-java-regex
+                            String user = userField.getText().toLowerCase().
+                                    replaceAll("\\W+", "");
+                            conf.writeUser(user);
+                        }
+                        new MainFrame(conf).setVisible(true);
+                    }
+                });
+            }
+        });
     }
 
     /**
@@ -31,13 +54,21 @@ public class UserFrame extends javax.swing.JFrame {
         userField = new javax.swing.JTextField();
         playButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        userBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "anonymous", "New..." }));
+        userBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                userBoxActionPerformed(evt);
+            }
+        });
 
-        userBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        userField.setText("jTextField1");
+        userField.setEditable(false);
 
         playButton.setText("Play");
+        playButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                playButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -45,11 +76,11 @@ public class UserFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(144, 144, 144)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(playButton)
-                    .addComponent(userField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(userBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(160, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(userBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(userField)
+                    .addComponent(playButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(137, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -66,44 +97,26 @@ public class UserFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(UserFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(UserFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(UserFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UserFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void playButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playButtonActionPerformed
+        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+    }//GEN-LAST:event_playButtonActionPerformed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new UserFrame().setVisible(true);
-            }
-        });
-    }
+    private void userBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userBoxActionPerformed
+        userField.setEditable(userFieldEditable());
+        
+        if (userFieldEditable()) {
+            conf.writeUser(userBox.getItemAt(userBox.getSelectedIndex()));
+        }
+    }//GEN-LAST:event_userBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton playButton;
     private javax.swing.JComboBox<String> userBox;
     private javax.swing.JTextField userField;
     // End of variables declaration//GEN-END:variables
+
+    private boolean userFieldEditable() {
+        int index = userBox.getSelectedIndex();
+        return (userBox.getItemCount() == (index + 1));
+    }
 }

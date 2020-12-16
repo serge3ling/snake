@@ -13,15 +13,12 @@ package Snake;
  * @author tret
  */
 public class Main {
-    /*public Main() {
-        add(new Board());
-        setResizable(false);
-        pack();
-        
-        setTitle("Snake");
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }*/
+    private UserFrame userFrame;
+    private MainFrame mainFrame;
+    
+    public Main() {
+       userFrame = new UserFrame();
+    }
     
     /**
      * @param args the command line arguments

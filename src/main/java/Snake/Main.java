@@ -15,7 +15,6 @@ package Snake;
 public class Main {
     /*public Main() {
         add(new Board());
-        
         setResizable(false);
         pack();
         

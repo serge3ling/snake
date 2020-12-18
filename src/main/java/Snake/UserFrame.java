@@ -7,6 +7,7 @@ package Snake;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.SwingUtilities;
 
 /**
@@ -30,15 +31,27 @@ public class UserFrame extends javax.swing.JFrame {
                     public void run() {
                         if (userFieldEditable()) {
                             //https://www.tutorialspoint.com/how-to-match-a-non-word-character-using-java-regex
-                            String user = userField.getText().toLowerCase().
-                                    replaceAll("\\W+", "");
-                            conf.writeUser(user);
+                            /*String user = userField.getText().toLowerCase().
+                                    replaceAll("\\W+", "");*/
+                            conf.writeUser(userField.getText());
                         }
                         new MainFrame(conf).setVisible(true);
                     }
                 });
             }
         });
+        userBox.setModel(makeUserBoxModel());
+    }
+    
+    private DefaultComboBoxModel makeUserBoxModel() {
+        String[] users = new RecordSave().readUsers();
+        String[] modelArray = new String[users.length + 2];
+        modelArray[0] = "anonymous";
+        modelArray[modelArray.length - 1] = "Новий...";
+        for (int i = 0; i < users.length; i++) {
+            modelArray[i + 1] = users[i];
+        }
+        return new DefaultComboBoxModel<String>(modelArray);
     }
 
     /**
@@ -105,6 +118,8 @@ public class UserFrame extends javax.swing.JFrame {
         userField.setEditable(userFieldEditable());
         
         if (userFieldEditable()) {
+            conf.writeUser(userField.getText());
+        } else {
             conf.writeUser(userBox.getItemAt(userBox.getSelectedIndex()));
         }
     }//GEN-LAST:event_userBoxActionPerformed

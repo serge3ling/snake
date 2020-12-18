@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Snake;
 
 import java.awt.Color;
@@ -27,56 +22,59 @@ import javax.swing.Timer;
  * @author tret
  */
 public class Board extends JPanel implements ActionListener {
-    private final int B_WIDTH = 300;
-    private final int B_HEIGHT = 300;
+    private final int WIDTH = 300;
+    private final int HEIGHT = 300;
     private final int DOT_SIZE = 10;
-    private final int ALL_DOTS = 900;
-    private final int RAND_POS = 29;
+    private final int DOT_CNT = 900;
+    private final int RANDOM_DOT = 29;
     private final int DELAY = 140;
 
-    private final int x[] = new int[ALL_DOTS];
-    private final int y[] = new int[ALL_DOTS];
+    private final int x[] = new int[DOT_CNT];
+    private final int y[] = new int[DOT_CNT];
 
     private int dots;
-    private int apple_x;
-    private int apple_y;
+    private int foodX;
+    private int foodY;
 
-    private boolean leftDirection = false;
-    private boolean rightDirection = true;
-    private boolean upDirection = false;
-    private boolean downDirection = false;
-    private boolean inGame = true;
+    private boolean left = false;
+    private boolean right = true;
+    private boolean up = false;
+    private boolean down = false;
+    private boolean playing = true;
 
     private Timer timer;
     private Image ball;
-    private Image apple;
+    private Image food;
     private Image head;
+    
+    private Conf conf;
 
-    public Board() {
+    public Board(Conf conf) {
+        this.conf = conf;
 
-        addKeyListener(new TAdapter());
-        setBackground(Color.black);
+        addKeyListener(new BoardKeyAdapter());
+        setBackground(Color.darkGray);
         setFocusable(true);
 
-        setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
+        setPreferredSize(new Dimension(WIDTH, HEIGHT));
         loadImages();
         initGame();
     }
 
     private void loadImages() {
-
         ImageIcon iid = new ImageIcon("dot.png");
         ball = iid.getImage();
 
-        ImageIcon iia = new ImageIcon("apple.png");
-        apple = iia.getImage();
+        ImageIcon iia = new ImageIcon("food.png");
+        food = iia.getImage();
 
         ImageIcon iih = new ImageIcon("head.png");
         head = iih.getImage();
     }
 
-    private void initGame() {
-
+    public void initGame() {
+        directionsFalse();
+        right = true;
         dots = 3;
 
         for (int z = 0; z < dots; z++) {
@@ -84,7 +82,7 @@ public class Board extends JPanel implements ActionListener {
             y[z] = 50;
         }
 
-        locateApple();
+        putFood();
 
         timer = new Timer(DELAY, this);
         timer.start();
@@ -98,10 +96,8 @@ public class Board extends JPanel implements ActionListener {
     }
     
     private void doDrawing(Graphics g) {
-        
-        if (inGame) {
-
-            g.drawImage(apple, apple_x, apple_y, this);
+        if (playing) {
+            g.drawImage(food, foodX, foodY, this);
 
             for (int z = 0; z < dots; z++) {
                 if (z == 0) {
@@ -112,109 +108,88 @@ public class Board extends JPanel implements ActionListener {
             }
 
             Toolkit.getDefaultToolkit().sync();
-
         } else {
-
             gameOver(g);
         }        
     }
 
     private void gameOver(Graphics g) {
-        
-        String msg = "Game Over";
+        /*String msg = "Гра закінчена.";
         Font small = new Font("Helvetica", Font.BOLD, 14);
         FontMetrics metr = getFontMetrics(small);
 
         g.setColor(Color.white);
         g.setFont(small);
-        g.drawString(msg, (B_WIDTH - metr.stringWidth(msg)) / 2, B_HEIGHT / 2);
+        g.drawString(msg, (B_WIDTH - metr.stringWidth(msg)) / 2, B_HEIGHT / 2);*/
         
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                RecordFrame.main(null);
+                playing = true;
+                RecordFrame recordFrame = new RecordFrame(conf, dots);
+                recordFrame.setVisible(true);
             }
         });
     }
 
-    private void checkApple() {
-
-        if ((x[0] == apple_x) && (y[0] == apple_y)) {
-
+    private void checkFood() {
+        if ((x[0] == foodX) && (y[0] == foodY)) {
             dots++;
-            locateApple();
+            putFood();
         }
     }
 
     private void move() {
-
         for (int z = dots; z > 0; z--) {
             x[z] = x[(z - 1)];
             y[z] = y[(z - 1)];
         }
 
-        if (leftDirection) {
+        if (left) {
             x[0] -= DOT_SIZE;
         }
 
-        if (rightDirection) {
+        if (right) {
             x[0] += DOT_SIZE;
         }
 
-        if (upDirection) {
+        if (up) {
             y[0] -= DOT_SIZE;
         }
 
-        if (downDirection) {
+        if (down) {
             y[0] += DOT_SIZE;
         }
     }
 
     private void checkCollision() {
-
         for (int z = dots; z > 0; z--) {
-
             if ((z > 4) && (x[0] == x[z]) && (y[0] == y[z])) {
-                inGame = false;
+                playing = false;
             }
         }
 
-        if (y[0] >= B_HEIGHT) {
-            inGame = false;
-        }
-
-        if (y[0] < 0) {
-            inGame = false;
-        }
-
-        if (x[0] >= B_WIDTH) {
-            inGame = false;
-        }
-
-        if (x[0] < 0) {
-            inGame = false;
+        if ((y[0] >= HEIGHT) || (y[0] < 0) || (x[0] >= WIDTH) || (x[0] < 0)) {
+            playing = false;
         }
         
-        if(!inGame) {
+        if(!playing) {
             timer.stop();
         }
     }
 
-    private void locateApple() {
+    private void putFood() {
+        int r = (int) (Math.random() * RANDOM_DOT);
+        foodX = r * DOT_SIZE;
 
-        int r = (int) (Math.random() * RAND_POS);
-        apple_x = ((r * DOT_SIZE));
-
-        r = (int) (Math.random() * RAND_POS);
-        apple_y = ((r * DOT_SIZE));
+        r = (int) (Math.random() * RANDOM_DOT);
+        foodY = r * DOT_SIZE;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
-        if (inGame) {
-
-            checkApple();
+        if (playing) {
+            checkFood();
             checkCollision();
             move();
         }
@@ -222,36 +197,37 @@ public class Board extends JPanel implements ActionListener {
         repaint();
     }
 
-    private class TAdapter extends KeyAdapter {
-
+    private class BoardKeyAdapter extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
-
             int key = e.getKeyCode();
 
-            if ((key == KeyEvent.VK_LEFT) && (!rightDirection)) {
-                leftDirection = true;
-                upDirection = false;
-                downDirection = false;
+            if ((key == KeyEvent.VK_LEFT) && (!right)) {
+                directionsFalse();
+                left = true;
             }
 
-            if ((key == KeyEvent.VK_RIGHT) && (!leftDirection)) {
-                rightDirection = true;
-                upDirection = false;
-                downDirection = false;
+            if ((key == KeyEvent.VK_RIGHT) && (!left)) {
+                directionsFalse();
+                right = true;
             }
 
-            if ((key == KeyEvent.VK_UP) && (!downDirection)) {
-                upDirection = true;
-                rightDirection = false;
-                leftDirection = false;
+            if ((key == KeyEvent.VK_UP) && (!down)) {
+                directionsFalse();
+                up = true;
             }
 
-            if ((key == KeyEvent.VK_DOWN) && (!upDirection)) {
-                downDirection = true;
-                rightDirection = false;
-                leftDirection = false;
+            if ((key == KeyEvent.VK_DOWN) && (!up)) {
+                directionsFalse();
+                down = true;
             }
         }
+    }
+    
+    private void directionsFalse() {
+        left = false;
+        right = false;
+        up = false;
+        down = false;
     }
 }

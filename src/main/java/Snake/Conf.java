@@ -11,6 +11,11 @@ package Snake;
  */
 public class Conf {
     private String user = "anonymous";
+    private RecordSave recordSave;
+    
+    public Conf() {
+        recordSave = new RecordSave();
+    }
     
     public String readUser() {
         return user;
@@ -18,5 +23,9 @@ public class Conf {
     
     public void writeUser(String user) {
         this.user = user;
+    }
+    
+    public RecordSave getRecordSave() {
+        return recordSave;
     }
 }

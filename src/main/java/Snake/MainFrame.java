@@ -6,6 +6,7 @@
 package Snake;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -13,6 +14,7 @@ import javax.swing.JFrame;
  */
 public class MainFrame extends javax.swing.JFrame {
     private final Conf conf;
+    private final Board board;
     
     /**
      * Creates new form MainFrame
@@ -22,12 +24,13 @@ public class MainFrame extends javax.swing.JFrame {
         
         //initComponents();
         init();
-        add(new Board());
+        board = new Board(conf);
+        add(board);
         
         setResizable(false);
         pack();
         
-        setTitle("Snake");
+        setTitle("Snake - " + conf.readUser());
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -44,7 +47,8 @@ public class MainFrame extends javax.swing.JFrame {
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         exitMenuItem = new javax.swing.JMenuItem();
-        helpMenu = new javax.swing.JMenu();
+        playMenu = new javax.swing.JMenu();
+        restartMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -60,8 +64,17 @@ public class MainFrame extends javax.swing.JFrame {
 
         menuBar.add(fileMenu);
 
-        helpMenu.setText("Допомога");
-        menuBar.add(helpMenu);
+        playMenu.setText("Гра");
+
+        restartMenuItem.setText("Перезапуск");
+        restartMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                restartMenuItemActionPerformed(evt);
+            }
+        });
+        playMenu.add(restartMenuItem);
+
+        menuBar.add(playMenu);
 
         setJMenuBar(menuBar);
 
@@ -83,11 +96,21 @@ public class MainFrame extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
+    private void restartMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restartMenuItemActionPerformed
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                board.initGame();
+            }
+        });
+    }//GEN-LAST:event_restartMenuItemActionPerformed
+
     private void init() {
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         exitMenuItem = new javax.swing.JMenuItem();
-        helpMenu = new javax.swing.JMenu();
+        playMenu = new javax.swing.JMenu();
+        restartMenuItem = new javax.swing.JMenuItem();
 
         fileMenu.setText("Файл");
 
@@ -101,8 +124,20 @@ public class MainFrame extends javax.swing.JFrame {
 
         menuBar.add(fileMenu);
 
-        helpMenu.setText("Допомога");
-        menuBar.add(helpMenu);
+        playMenu.setText("Допомога");
+        menuBar.add(playMenu);
+
+        playMenu.setText("Гра");
+
+        restartMenuItem.setText("Перезапуск");
+        restartMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                restartMenuItemActionPerformed(evt);
+            }
+        });
+        playMenu.add(restartMenuItem);
+
+        menuBar.add(playMenu);
 
         setJMenuBar(menuBar);
     }
@@ -145,7 +180,8 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
-    private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenu playMenu;
+    private javax.swing.JMenuItem restartMenuItem;
     // End of variables declaration//GEN-END:variables
 }

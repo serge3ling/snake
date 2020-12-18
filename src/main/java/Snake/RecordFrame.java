@@ -5,17 +5,53 @@
  */
 package Snake;
 
+import javax.swing.table.DefaultTableModel;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  *
  * @author tret
  */
 public class RecordFrame extends javax.swing.JFrame {
+    DefaultTableModel model;
+    private final Conf conf;
 
     /**
      * Creates new form RecordFrame
      */
-    public RecordFrame() {
+    public RecordFrame(Conf conf, int recordPoints) {
+        this.conf = conf;
         initComponents();
+        pointsLabel.setText("Останній результат: (" +
+                conf.readUser() + ") " + recordPoints + ".");
+        makeTable(new Record(conf.readUser(), recordPoints));
+    }
+    
+    private void makeTable(Record record) {
+        Object[] columnNames = { "Ім'я", "Результат" };
+        model = new DefaultTableModel();
+        model.setColumnIdentifiers(columnNames);
+        makeModelData(record);
+        recordTable.setModel(model);
+    }
+    
+    private void makeModelData(Record record) {
+        conf.getRecordSave().makeTopRecords();
+        conf.getRecordSave().save(record);
+        Record[] records = conf.getRecordSave().makeTopRecords();
+        Set<String> userSet = new HashSet<>();
+        for (int i = 0; i < records.length; i++) {
+            if (!userSet.contains(records[i].user)) {
+                userSet.add(records[i].user);
+                model.addRow(makeRow(records[i]));
+            }
+        }
+    }
+    
+    private Object[] makeRow(Record record) {
+        Object[] row = { record.user, record.points };
+        return row;
     }
 
     /**
@@ -27,8 +63,10 @@ public class RecordFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        tableScroll = new javax.swing.JScrollPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         recordTable = new javax.swing.JTable();
+        pointsLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -52,21 +90,31 @@ public class RecordFrame extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(recordTable);
 
+        tableScroll.setViewportView(jScrollPane1);
+
+        pointsLabel.setText("Останній результат: ");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(13, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(pointsLabel)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(tableScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(13, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(pointsLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tableScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         pack();
@@ -102,13 +150,15 @@ public class RecordFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new RecordFrame().setVisible(true);
+                new RecordFrame(new Conf(), 0).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel pointsLabel;
     private javax.swing.JTable recordTable;
+    private javax.swing.JScrollPane tableScroll;
     // End of variables declaration//GEN-END:variables
 }

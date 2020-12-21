@@ -86,6 +86,20 @@ public class Board extends JPanel implements ActionListener {
 
         timer = new Timer(DELAY, this);
         timer.start();
+        
+        clickMouse();
+    }
+    
+    private void clickMouse() {
+        try {
+            java.awt.Point point = javax.swing.SwingUtilities.convertPoint(
+                    this, this.getX(), this.getY(), this);
+            java.awt.Robot robot = new java.awt.Robot();
+            robot.mouseMove(point.x, point.y);
+            robot.mousePress(java.awt.event.InputEvent.BUTTON1_DOWN_MASK);
+            robot.mouseRelease(java.awt.event.InputEvent.BUTTON1_DOWN_MASK);
+        } catch (java.awt.AWTException e) {
+        }
     }
 
     @Override

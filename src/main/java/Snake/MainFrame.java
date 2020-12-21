@@ -7,6 +7,8 @@ package Snake;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 
 /**
  *
@@ -44,37 +46,20 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenuItem1 = new javax.swing.JMenuItem();
         menuBar = new javax.swing.JMenuBar();
-        fileMenu = new javax.swing.JMenu();
-        exitMenuItem = new javax.swing.JMenuItem();
-        playMenu = new javax.swing.JMenu();
-        restartMenuItem = new javax.swing.JMenuItem();
+        exitMenu = new javax.swing.JMenu();
+        restartMenu = new javax.swing.JMenu();
+
+        jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        fileMenu.setText("Файл");
+        exitMenu.setText("Вихід");
+        menuBar.add(exitMenu);
 
-        exitMenuItem.setText("Вихід");
-        exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exitMenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(exitMenuItem);
-
-        menuBar.add(fileMenu);
-
-        playMenu.setText("Гра");
-
-        restartMenuItem.setText("Перезапуск");
-        restartMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                restartMenuItemActionPerformed(evt);
-            }
-        });
-        playMenu.add(restartMenuItem);
-
-        menuBar.add(playMenu);
+        restartMenu.setText("Перезапуск");
+        menuBar.add(restartMenu);
 
         setJMenuBar(menuBar);
 
@@ -92,52 +77,51 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
-        System.exit(0);
-    }//GEN-LAST:event_exitMenuItemActionPerformed
-
-    private void restartMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restartMenuItemActionPerformed
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                board.initGame();
-            }
-        });
-    }//GEN-LAST:event_restartMenuItemActionPerformed
-
     private void init() {
         menuBar = new javax.swing.JMenuBar();
-        fileMenu = new javax.swing.JMenu();
-        exitMenuItem = new javax.swing.JMenuItem();
-        playMenu = new javax.swing.JMenu();
-        restartMenuItem = new javax.swing.JMenuItem();
+        exitMenu = new javax.swing.JMenu();
+        //exitMenuItem = new javax.swing.JMenuItem();
+        restartMenu = new javax.swing.JMenu();
+        //restartMenuItem = new javax.swing.JMenuItem();
 
-        fileMenu.setText("Файл");
+        exitMenu.setText("Файл");
 
-        exitMenuItem.setText("Вихід");
-        exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exitMenuItemActionPerformed(evt);
+        exitMenu.setText("Вихід");
+        exitMenu.addMenuListener(new MenuListener() {
+            @Override
+            public void menuSelected(MenuEvent evt) {
+                System.out.println("Before exit.");
+                System.exit(0);
+            }
+            
+            @Override
+            public void menuCanceled(MenuEvent evt) {}
+            @Override
+            public void menuDeselected(MenuEvent evt) {}
+        });
+        //exitMenu.add(exitMenuItem);
+
+        menuBar.add(exitMenu);
+
+        restartMenu.setText("Перезапуск");
+        menuBar.add(restartMenu);
+
+        //restartMenuItem.setText("Перезапуск");
+        restartMenu.addMenuListener(new MenuListener() {
+            public void menuSelected(MenuEvent evt) {
+                board.initGame();
+            }
+            
+            @Override
+            public void menuCanceled(MenuEvent evt) {
+            }
+            @Override
+            public void menuDeselected(MenuEvent evt) {
             }
         });
-        fileMenu.add(exitMenuItem);
+        //restartMenu.add(restartMenuItem);
 
-        menuBar.add(fileMenu);
-
-        playMenu.setText("Допомога");
-        menuBar.add(playMenu);
-
-        playMenu.setText("Гра");
-
-        restartMenuItem.setText("Перезапуск");
-        restartMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                restartMenuItemActionPerformed(evt);
-            }
-        });
-        playMenu.add(restartMenuItem);
-
-        menuBar.add(playMenu);
+        menuBar.add(restartMenu);
 
         setJMenuBar(menuBar);
     }
@@ -178,10 +162,9 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem exitMenuItem;
-    private javax.swing.JMenu fileMenu;
+    private javax.swing.JMenu exitMenu;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JMenu playMenu;
-    private javax.swing.JMenuItem restartMenuItem;
+    private javax.swing.JMenu restartMenu;
     // End of variables declaration//GEN-END:variables
 }
